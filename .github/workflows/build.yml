@@ -63,24 +63,24 @@ jobs:
           labels: ${{ steps.metadata.outputs.labels }}
           oci: false
 
-      - name: Run rechunker
-        id: rechunk
-        uses: hhd-dev/rechunk@v1.2.1
-        with:
-          rechunk: "ghcr.io/hhd-dev/rechunk:v1.2.1"
-          ref: "${{ env.IMAGE_NAME }}:${{ env.DEFAULT_TAG }}"
-          prev-ref: "${{ env.IMAGE_REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.DEFAULT_TAG }}"
-          version: ${{ env.CENTOS_VERSION }}
-          labels: ${{ steps.metadata.outputs.labels }}
-          skip_compression: true
+      # - name: Run rechunker
+      #   id: rechunk
+      #   uses: hhd-dev/rechunk@v1.2.1
+      #   with:
+      #     rechunk: "ghcr.io/hhd-dev/rechunk:v1.2.1"
+      #     ref: "localhost/${{ env.IMAGE_NAME }}:${{ env.DEFAULT_TAG }}"
+      #     prev-ref: "${{ env.IMAGE_REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.DEFAULT_TAG }}"
+      #     version: ${{ env.CENTOS_VERSION }}
+      #     labels: ${{ steps.metadata.outputs.labels }}
+      #     skip_compression: true
 
-      - name: Load in podman and tag
-        run: |
-          IMAGE=$(podman pull ${{ steps.rechunk.outputs.ref }})
-          sudo rm -rf ${{ steps.rechunk.outputs.output }}
-          for tag in ${{ steps.metadata.outputs.tags }}; do
-            podman tag $IMAGE ${{ env.IMAGE_NAME }}:$tag
-          done
+      # - name: Load in podman and tag
+      #   run: |
+      #     IMAGE=$(podman pull ${{ steps.rechunk.outputs.ref }})
+      #     sudo rm -rf ${{ steps.rechunk.outputs.output }}
+      #     for tag in ${{ steps.metadata.outputs.tags }}; do
+      #       podman tag $IMAGE ${{ env.IMAGE_NAME }}:$tag
+      #     done
 
       # Only on "main".
       - name: Login to GHCR
