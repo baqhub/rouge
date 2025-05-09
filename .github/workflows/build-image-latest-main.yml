@@ -1,12 +1,12 @@
 name: Latest Images
 on:
   merge_group:
-  pull_request:
-    branches:
-      - main
-      - testing
-    paths-ignore:
-      - "**.md"
+  # pull_request:
+  #   branches:
+  #     - main
+  #     - testing
+  #   paths-ignore:
+  #     - "**.md"
   workflow_call:
   workflow_dispatch:
 
@@ -31,4 +31,3 @@ jobs:
     uses: ./.github/workflows/generate-release.yml
     with:
       stream_name: '["latest"]'
-
