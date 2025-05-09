@@ -1,16 +1,16 @@
 name: GTS Images
 on:
-  pull_request:
-    branches:
-      - main
-      - testing
-    paths-ignore:
-      - ".github/workflows/*iso*"
-      - "**.md"
-      - "flatpaks/**"
-      - "iso_files/**"
-  schedule:
-    - cron: "50 5 * * 0" # 5:50 UTC Weekly on Sundays
+  # pull_request:
+  #   branches:
+  #     - main
+  #     - testing
+  #   paths-ignore:
+  #     - ".github/workflows/*iso*"
+  #     - "**.md"
+  #     - "flatpaks/**"
+  #     - "iso_files/**"
+  # schedule:
+  #   - cron: "50 5 * * 0" # 5:50 UTC Weekly on Sundays
   workflow_dispatch:
   workflow_call:
 

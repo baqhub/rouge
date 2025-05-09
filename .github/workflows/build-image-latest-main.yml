@@ -1,15 +1,15 @@
 name: Latest Images
 on:
   merge_group:
-  pull_request:
-    branches:
-      - main
-      - testing
-    paths-ignore:
-      - '.github/workflows/*iso*'
-      - '**.md'
-      - 'flatpaks/**'
-      - 'iso_files/**'
+  # pull_request:
+  #   branches:
+  #     - main
+  #     - testing
+  #   paths-ignore:
+  #     - '.github/workflows/*iso*'
+  #     - '**.md'
+  #     - 'flatpaks/**'
+  #     - 'iso_files/**'
   workflow_call:
   workflow_dispatch:
 
