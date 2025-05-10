@@ -35,12 +35,12 @@ jobs:
       brand_name: ${{ matrix.brand_name }}
       stream_name: latest
 
-  generate-release:
-    name: Generate Release
-    needs: [build-image-latest]
-    permissions:
-      contents: write
-    secrets: inherit
-    uses: ./.github/workflows/generate-release.yml
-    with:
-      stream_name: '["latest"]'
+  # generate-release:
+  #   name: Generate Release
+  #   needs: [build-image-latest]
+  #   permissions:
+  #     contents: write
+  #   secrets: inherit
+  #   uses: ./.github/workflows/generate-release.yml
+  #   with:
+  #     stream_name: '["latest"]'
