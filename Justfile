@@ -1,4 +1,4 @@
-repo_organization := "ublue-os"
+repo_organization := "baqhub"
 rechunker_image := "ghcr.io/hhd-dev/rechunk:v1.2.4@sha256:8a84bd5a029681aa8db523f927b7c53b5aded9b078b81605ac0a2fedc969f528"
 iso_builder_image := "ghcr.io/jasonn3/build-container-installer:v1.3.0@sha256:c5a44ee1b752fd07309341843f8d9f669d0604492ce11b28b966e36d8297ad29"
 images := '(
@@ -396,7 +396,7 @@ rechunk $image="rouge" $tag="latest" $flavor="main" ghcr="0" pipeline="0":
         --volume "$PWD:/var/git" \
         --volume cache_ostree:/var/ostree \
         --env REPO=/var/ostree/repo \
-        --env PREV_REF=ghcr.io/ublue-os/"${image_name}":"${tag}" \
+        --env PREV_REF=ghcr.io/baqhub/"${image_name}":"${tag}" \
         --env OUT_NAME="$OUT_NAME" \
         --env LABELS="${LABELS}" \
         --env "DESCRIPTION='An interpretation of the Ubuntu spirit built on Fedora technology'" \
@@ -494,8 +494,8 @@ build-iso $image="rouge" $tag="latest" $flavor="main" ghcr="0" pipeline="0":
 
     # Local or Github Build
     if [[ "{{ ghcr }}" == "1" ]]; then
-        IMAGE_FULL=ghcr.io/ublue-os/"${image_name}":"${tag}"
-        IMAGE_REPO=ghcr.io/ublue-os
+        IMAGE_FULL=ghcr.io/baqhub/"${image_name}":"${tag}"
+        IMAGE_REPO=ghcr.io/baqhub
         ${PODMAN} pull "${IMAGE_FULL}"
     else
         IMAGE_FULL=localhost/"${image_name}":"${tag}"
@@ -665,7 +665,7 @@ changelogs branch="stable" handwritten="":
 
 # Verify Container with Cosign
 [group('Utility')]
-verify-container container="" registry="ghcr.io/ublue-os" key="":
+verify-container container="" registry="ghcr.io/baqhub" key="":
     #!/usr/bin/bash
     set -eou pipefail
 
@@ -687,7 +687,7 @@ verify-container container="" registry="ghcr.io/ublue-os" key="":
     # Public Key for Container Verification
     key={{ key }}
     if [[ -z "${key:-}" ]]; then
-        key="https://raw.githubusercontent.com/ublue-os/main/main/cosign.pub"
+        key="https://raw.githubusercontent.com/baqhub/rouge/main/cosign.pub"
     fi
 
     # Verify Container using cosign public key
@@ -911,5 +911,5 @@ retag-nvidia-on-ghcr working_tag="" stream="" dry_run="1":
         skopeo="skopeo"
     fi
     for image in rouge-nvidia-open rouge-nvidia rouge-dx-nvidia rouge-dx-nvidia-open; do
-      $skopeo copy docker://ghcr.io/ublue-os/${image}:{{ working_tag }} docker://ghcr.io/ublue-os/${image}:{{ stream }}
+      $skopeo copy docker://ghcr.io/baqhub/${image}:{{ working_tag }} docker://ghcr.io/baqhub/${image}:{{ stream }}
     done
