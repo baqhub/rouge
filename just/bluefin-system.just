@@ -98,14 +98,14 @@ dx-group:
         fi
     }
 
-    GROUPS_ADD=("docker" "incus-admin" "libvirt" "dialout")
+    GROUPS_ADD=("incus-admin" "libvirt" "dialout")
 
     for GROUP_ADD in "${GROUPS_ADD[@]}" ; do
         append_group $GROUP_ADD
         usermod -aG $GROUP_ADD {{ `id -un` }}
     done
 
-    echo "Reboot system and log back in to use docker, libvirt, incus, and serial connections."
+    echo "Reboot system and log back in to use libvirt, incus, and serial connections."
 
 # Install system flatpaks for rebasers
 [group('System')]

@@ -109,13 +109,7 @@
 				"cockpit-selinux",
 				"cockpit-storaged",
 				"cockpit-system",
-				"containerd.io",
 				"dbus-x11",
-				"docker-buildx-plugin",
-				"docker-ce",
-				"docker-ce-cli",
-				"docker-compose-plugin",
-				"docker-model-plugin",
 				"edk2-ovmf",
 				"flatpak-builder",
 				"genisoimage",
@@ -194,9 +188,7 @@
 			"dx": []
 		},
 		"exclude": {
-			"all": [
-
-			],
+			"all": [],
 			"dx": []
 		}
 	},
@@ -211,7 +203,7 @@
 		},
 		"exclude": {
 			"all": [
-  				"gnome-software"
+				"gnome-software"
 			],
 			"dx": []
 		}
