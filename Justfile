@@ -175,6 +175,7 @@ build $image="rouge" $tag="latest" $flavor="main" rechunk="0" ghcr="0" pipeline=
     else
         ver="${tag}-${fedora_version}.$(date +%Y%m%d)"
     fi
+    # TODO: Re-enable once all the repos are created.
     # skopeo list-tags docker://ghcr.io/{{ repo_organization }}/${image_name} > /tmp/repotags.json
     # if [[ $(jq "any(.Tags[]; contains(\"$ver\"))" < /tmp/repotags.json) == "true" ]]; then
     #     POINT="1"
