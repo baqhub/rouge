@@ -334,7 +334,7 @@ rechunk $image="rouge" $tag="latest" $flavor="main" ghcr="0" pipeline="0":
         if [[ "${tag}" =~ stable ]]; then
             tag="stable-daily"
         fi
-        ID=$(${SUDOIF} ${PODMAN} images --filter reference=ghcr.io/{{ repo_organization }}/"${base_image_name}":${fedora_version} --format "{{ '{{.ID}}' }}")
+        ID=$(${SUDOIF} ${PODMAN} images --filter reference=ghcr.io/ublue-os/"${base_image_name}":${fedora_version} --format "{{ '{{.ID}}' }}")
         if [[ -n "$ID" ]]; then
             ${PODMAN} rmi "$ID"
         fi
@@ -656,7 +656,7 @@ changelogs branch="stable" handwritten="":
 
 # Verify Container with Cosign
 [group('Utility')]
-verify-container container="" registry="ghcr.io/baqhub" key="":
+verify-container container="" registry="ghcr.io/ublue-os" key="":
     #!/usr/bin/bash
     set -eou pipefail
 
