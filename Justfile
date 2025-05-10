@@ -1,4 +1,4 @@
-repo_organization := "ublue-os"
+repo_organization := "baqhub"
 rechunker_image := "ghcr.io/ublue-os/legacy-rechunk:v1.0.1-x86_64@sha256:2627cbf92ca60ab7372070dcf93b40f457926f301509ffba47a04d6a9e1ddaf7"
 common_image := "ghcr.io/projectbluefin/common:latest"
 brew_image := "ghcr.io/ublue-os/brew:latest"
@@ -382,7 +382,7 @@ rechunk $image="rouge" $tag="latest" $flavor="main" ghcr="0" pipeline="0":
         --volume "$PWD:/var/git" \
         --volume cache_ostree:/var/ostree \
         --env REPO=/var/ostree/repo \
-        --env PREV_REF=ghcr.io/ublue-os/"${image_name}":"${tag}" \
+        --env PREV_REF=ghcr.io/baqhub/"${image_name}":"${tag}" \
         --env OUT_NAME="$OUT_NAME" \
         --env LABELS="${LABELS}" \
         --env "DESCRIPTION='An interpretation of the Ubuntu spirit built on Fedora technology'" \
@@ -467,7 +467,7 @@ changelogs branch="stable" handwritten="":
 
 # Verify Container with Cosign
 [group('Utility')]
-verify-container container="" registry="ghcr.io/ublue-os" key="":
+verify-container container="" registry="ghcr.io/baqhub" key="":
     #!/usr/bin/bash
     set -eou pipefail
 
@@ -489,7 +489,7 @@ verify-container container="" registry="ghcr.io/ublue-os" key="":
     # Public Key for Container Verification
     key={{ key }}
     if [[ -z "${key:-}" ]]; then
-        key="https://raw.githubusercontent.com/ublue-os/main/main/cosign.pub"
+        key="https://raw.githubusercontent.com/baqhub/rouge/main/cosign.pub"
     fi
 
     # Verify Container using cosign public key
@@ -724,5 +724,5 @@ retag-nvidia-on-ghcr working_tag="" stream="" dry_run="1":
         skopeo="skopeo"
     fi
     for image in rouge-nvidia-open rouge-dx-nvidia-open; do
-      $skopeo copy docker://ghcr.io/ublue-os/${image}:{{ working_tag }} docker://ghcr.io/ublue-os/${image}:{{ stream }}
+      $skopeo copy docker://ghcr.io/baqhub/${image}:{{ working_tag }} docker://ghcr.io/baqhub/${image}:{{ stream }}
     done
