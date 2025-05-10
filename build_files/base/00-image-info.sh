@@ -4,12 +4,12 @@ echo "::group:: ===$(basename "$0")==="
 
 set -ouex pipefail
 
-IMAGE_PRETTY_NAME="Bluefin"
+IMAGE_PRETTY_NAME="Rouge"
 IMAGE_LIKE="fedora"
-HOME_URL="https://projectbluefin.io"
-DOCUMENTATION_URL="https://docs.projectbluefin.io"
-SUPPORT_URL="https://github.com/ublue-os/bluefin/issues/"
-BUG_SUPPORT_URL="https://github.com/ublue-os/bluefin/issues/"
+HOME_URL="https://rougeos.com"
+DOCUMENTATION_URL="https://rougeos.com/docs"
+SUPPORT_URL="https://github.com/baqhub/rouge/issues/"
+BUG_SUPPORT_URL="https://github.com/baqhub/rouge/issues/"
 CODE_NAME="Archaeopteryx"
 VERSION="${VERSION:-00.00000000}"
 
