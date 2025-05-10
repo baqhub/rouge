@@ -4,7 +4,6 @@ echo "::group:: ===$(basename "$0")==="
 
 set -eoux pipefail
 
-
 # Enable Terra repo (Extras does not exist on F40)
 # shellcheck disable=SC2016
 dnf5 -y swap \
@@ -46,7 +45,6 @@ dnf -y swap fedora-logos bluefin-logos
 dnf -y install bluefin-plymouth
 
 # Consolidate Just Files
-
 find /tmp/just -iname '*.just' -exec printf "\n\n" \; -exec cat {} \; >>/usr/share/ublue-os/just/60-custom.just
 
 # Register Fonts
