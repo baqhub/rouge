@@ -61,7 +61,6 @@ UNWANTED_PACKAGES=(
     firefox
     gnome-software
     gnome-software-rpm-ostree
-    podman-docker
 )
 
 for package in "${UNWANTED_PACKAGES[@]}"; do

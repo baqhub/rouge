@@ -65,6 +65,7 @@ FEDORA_PACKAGES=(
     powerstat
     powertop
     printer-driver-brlaser
+    podman-docker
     pulseaudio-utils
     python3-pip
     python3-pygit2
@@ -145,7 +146,6 @@ EXCLUDED_PACKAGES=(
     gnome-software
     gnome-software-rpm-ostree
     gnome-terminal-nautilus
-    podman-docker
     yelp
 )
 
