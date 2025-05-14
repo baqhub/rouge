@@ -21,7 +21,7 @@ jobs:
         brand_name: ["rouge"]
     with:
       # image_flavors: '["main", "nvidia", "nvidia-open"]'
-      image_flavors: '["nvidia"]'
+      image_flavors: '["nvidia-open"]'
       brand_name: ${{ matrix.brand_name }}
       stream_name: latest
 
