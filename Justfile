@@ -5,6 +5,7 @@ brew_image := "ghcr.io/ublue-os/brew:latest"
 images := '(
     [rouge]=rouge
     [rouge-dx]=rouge-dx
+    [rouge-dx-ai]=rouge-dx-ai
 )'
 flavors := '(
     [main]=main
@@ -173,9 +174,10 @@ build $image="rouge" $tag="latest" $flavor="main" rechunk="0" ghcr="0" pipeline=
     # Build Arguments
     BUILD_ARGS=()
     # Target
-    if [[ "${image}" =~ dx ]]; then
+    if [[ "${image}" =~ dx-ai ]]; then
+        BUILD_ARGS+=("--build-arg" "IMAGE_FLAVOR=dx-ai")
+    elif [[ "${image}" =~ dx ]]; then
         BUILD_ARGS+=("--build-arg" "IMAGE_FLAVOR=dx")
-        target="dx"
     fi
     BUILD_ARGS+=("--build-arg" "AKMODS_FLAVOR=${akmods_flavor}")
     BUILD_ARGS+=("--build-arg" "BASE_IMAGE_NAME=${base_image_name}")
@@ -724,6 +726,6 @@ retag-nvidia-on-ghcr working_tag="" stream="" dry_run="1":
         echo "$GITHUB_PAT" | podman login -u $GITHUB_USERNAME --password-stdin ghcr.io
         skopeo="skopeo"
     fi
-    for image in rouge-nvidia-open rouge-dx-nvidia-open; do
+    for image in rouge-nvidia-open rouge-dx-nvidia-open rouge-dx-ai-nvidia-open; do
       $skopeo copy docker://ghcr.io/baqhub/${image}:{{ working_tag }} docker://ghcr.io/baqhub/${image}:{{ stream }}
     done
