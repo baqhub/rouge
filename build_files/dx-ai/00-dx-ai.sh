@@ -4,11 +4,8 @@ echo "::group:: ===$(basename "$0")==="
 
 set -ouex pipefail
 
-# Add NVIDIA container toolkit repo
-dnf config-manager addrepo --from-repofile=https://nvidia.github.io/libnvidia-container/stable/rpm/nvidia-container-toolkit.repo
-sed -i "s/enabled=.*/enabled=0/g" /etc/yum.repos.d/nvidia-container-toolkit.repo
-
 # Install nvidia-container-toolkit
+# The repo is already present from the DX Docker CE installation
 dnf -y install --enablerepo=nvidia-container-toolkit-experimental \
     nvidia-container-toolkit
 
