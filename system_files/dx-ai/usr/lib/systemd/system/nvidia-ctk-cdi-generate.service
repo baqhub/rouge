@@ -1,0 +1,12 @@
+[Unit]
+Description=Generate NVIDIA CDI specifications
+After=local-fs.target
+ConditionPathExists=/usr/bin/nvidia-ctk
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/usr/bin/nvidia-ctk cdi generate --output=/var/run/cdi/nvidia.yaml
+
+[Install]
+WantedBy=multi-user.target

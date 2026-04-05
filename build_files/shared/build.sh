@@ -50,9 +50,14 @@ echo "::endgroup::"
 # Regenerate initramfs
 /ctx/build_files/base/19-initramfs.sh
 
-if [ "${IMAGE_FLAVOR}" == "dx" ] ; then
+if [ "${IMAGE_FLAVOR}" == "dx" ] || [ "${IMAGE_FLAVOR}" == "dx-ai" ]; then
   # Now we build DX!
   /ctx/build_files/shared/build-dx.sh
+fi
+
+if [ "${IMAGE_FLAVOR}" == "dx-ai" ]; then
+  # Now we build DX-AI!
+  /ctx/build_files/shared/build-dx-ai.sh
 fi
 
 # Validate all repos are disabled before committing
