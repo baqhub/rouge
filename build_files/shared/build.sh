@@ -60,6 +60,9 @@ if [ "${IMAGE_FLAVOR}" == "dx-ai" ]; then
   /ctx/build_files/shared/build-dx-ai.sh
 fi
 
+# Generate flatpak preinstall config from flatpak lists
+/ctx/build_files/shared/generate-flatpak-preinstall.sh
+
 # Validate all repos are disabled before committing
 /ctx/build_files/shared/validate-repos.sh
 
