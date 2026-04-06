@@ -38,6 +38,75 @@ jobs:
       brand_name: ${{ matrix.brand_name }}
       stream_name: latest
 
+  build-iso:
+    name: Build ISO
+    needs: [build-image-latest]
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+      packages: read
+    strategy:
+      fail-fast: false
+      matrix:
+        base_name: ["rouge-dx-ai"]
+        image_flavor: ["nvidia-open"]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+
+      - name: Setup Just
+        uses: extractions/setup-just@f8a3cce218d9f83db3a2ecd90e41ac3de6cdfd9b # v3
+
+      - name: Image Name
+        id: image
+        run: |
+          IMAGE_NAME="$(just image_name ${{ matrix.base_name }} latest ${{ matrix.image_flavor }})"
+          echo "image_name=${IMAGE_NAME}" >> "$GITHUB_OUTPUT"
+
+      - name: Maximize build space
+        uses: ublue-os/remove-unwanted-software@695eb75bc387dbcd9685a8e72d23439d8686cba6
+
+      - name: Generate flatpaks list
+        id: flatpaks
+        run: |
+          set -eoux pipefail
+          FLATPAKS_LIST="$(mktemp)"
+          cat flatpaks/system-flatpaks.list > "${FLATPAKS_LIST}"
+          if [[ "${{ matrix.base_name }}" =~ dx ]]; then
+            cat flatpaks/system-flatpaks-dx.list >> "${FLATPAKS_LIST}"
+          fi
+          cat flatpaks/system-runtimes.list >> "${FLATPAKS_LIST}"
+          echo "flatpaks_list=${FLATPAKS_LIST}" >> "$GITHUB_OUTPUT"
+
+      - name: Build ISO
+        id: build
+        uses: ublue-os/titanoboa@main
+        with:
+          image-ref: ghcr.io/baqhub/${{ steps.image.outputs.image_name }}:latest
+          flatpaks-list: ${{ steps.flatpaks.outputs.flatpaks_list }}
+          hook-post-rootfs: ${{ github.workspace }}/iso_files/configure_iso.sh
+
+      - name: Rename and Checksum
+        env:
+          IMAGE_NAME: ${{ steps.image.outputs.image_name }}
+        run: |
+          mkdir -p output
+          mv ${{ steps.build.outputs.iso-dest }} output/${IMAGE_NAME}-latest.iso
+          (cd output && sha256sum *.iso | tee ${IMAGE_NAME}-latest.iso-CHECKSUM)
+
+      - name: Upload to Cloudflare R2
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+          AWS_ENDPOINT_URL: https://e7f259007ddc10617f9e5953984836cc.r2.cloudflarestorage.com
+          AWS_REGION: auto
+        run: |
+          aws s3 cp output/ s3://rouge-public/iso/ \
+            --recursive \
+            --content-disposition "attachment" \
+            --cache-control "public, max-age=86400"
+
   # generate-release:
   #   name: Generate Release
   #   needs: [build-image-latest]
