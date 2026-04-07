@@ -72,5 +72,9 @@ echo "::group:: Cleanup"
 
 echo "::endgroup::"
 
+# Add Flatpak remotes (after clean-stage which wipes /var/lib/flatpak)
+flatpak remote-add --system --if-not-exists flatsoftware https://flat.software/repo.flatpakrepo
+flatpak remote-add --system --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+
 # Simple Tests
 /ctx/build_files/base/20-tests.sh

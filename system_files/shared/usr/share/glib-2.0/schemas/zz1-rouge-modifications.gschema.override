@@ -1,0 +1,9 @@
+[org.gnome.shell]
+favorite-apps = ['org.gnome.Nautilus.desktop', 'io.github.kolunmi.Bazaar.desktop', 'org.chromium.Chromium.desktop']
+
+[org.gnome.desktop.interface]
+monospace-font-name="Adwaita Mono 10"
+
+[org.gnome.Ptyxis.Shortcuts]
+copy-clipboard='<ctrl>c'
+paste-clipboard='<ctrl>v'
