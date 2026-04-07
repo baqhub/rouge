@@ -58,7 +58,7 @@ SPECS=(
     "libblockdev-lvm"
     "libblockdev-dm"
     "anaconda-live"
-    "chromium"
+    "firefox"
 )
 
 dnf install -y "${SPECS[@]}"
