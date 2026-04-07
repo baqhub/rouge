@@ -104,8 +104,7 @@ jobs:
         run: |
           aws s3 cp output/ s3://rouge-public/iso/ \
             --recursive \
-            --content-disposition "attachment" \
-            --cache-control "public, max-age=86400"
+            --cache-control "no-cache"
 
   # generate-release:
   #   name: Generate Release
