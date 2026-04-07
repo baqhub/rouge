@@ -5,11 +5,6 @@ echo "::group:: ===$(basename "$0")==="
 set -eoux pipefail
 
 IMPORTANT_PACKAGES_DX=(
-    code
-    containerd.io
-    docker-ce
-    docker-buildx-plugin
-    docker-compose-plugin
     flatpak-builder
     libvirt
     qemu
@@ -20,7 +15,6 @@ for package in "${IMPORTANT_PACKAGES_DX[@]}"; do
 done
 
 IMPORTANT_UNITS=(
-    docker.socket
     podman.socket
 )
 
