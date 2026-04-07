@@ -1,5 +1,6 @@
 [org.gnome.shell]
 favorite-apps = ['org.gnome.Nautilus.desktop', 'io.github.kolunmi.Bazaar.desktop', 'org.chromium.Chromium.desktop']
+enabled-extensions = ['appindicatorsupport@rgcjonas.gmail.com', 'dash-to-dock@micxgx.gmail.com', 'gsconnect@andyholmes.github.io', 'logomenu@aryan_k', 'tailscale@joaophi.github.com', 'search-light@icedman.github.com']
 
 [org.gnome.desktop.interface]
 monospace-font-name="Adwaita Mono 10"

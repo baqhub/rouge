@@ -11,10 +11,10 @@ sbkey='https://github.com/ublue-os/akmods/raw/main/certs/public_key.der'
 # Configure Live Environment
 
 # Setup dock
-tee /usr/share/glib-2.0/schemas/zz2-org.gnome.shell.gschema.override <<EOF
+tee /usr/share/glib-2.0/schemas/zz9-rouge-iso.gschema.override <<EOF
 [org.gnome.shell]
 welcome-dialog-last-shown-version='4294967295'
-favorite-apps = ['anaconda.desktop', 'org.chromium.Chromium.desktop', 'org.gnome.Nautilus.desktop']
+favorite-apps = ['anaconda.desktop', 'org.gnome.Nautilus.desktop']
 EOF
 
 # Disable suspend/sleep during live environment and installation
