@@ -40,6 +40,7 @@ FEDORA_PACKAGES=(
     podman-compose
     podman-machine
     podman-tui
+    podmansh
     qemu
     qemu-char-spice
     qemu-device-display-virtio-gpu
