@@ -62,7 +62,7 @@ echo "IMAGE_VERSION=\"${VERSION}\"" >> /usr/lib/os-release
 # Fix issues caused by ID no longer being fedora
 sed -i "s|^EFIDIR=.*|EFIDIR=\"fedora\"|" /usr/sbin/grub2-switch-to-blscfg
 
-# Weekly user count for fastfetch
+# Weekly user count for fastfetch (still using bluefin's endpoint until rouge has one)
 ghcurl https://raw.githubusercontent.com/ublue-os/countme/main/badge-endpoints/bluefin.json | jq -r ".message" > /usr/share/ublue-os/fastfetch-user-count
 
 # bazaar weekly downloads used for fastfetch

@@ -684,7 +684,7 @@ tag-images image_name="" default_tag="" tags="":
 
 # DNF CI package cache
 [group('Utility')]
-setup-cache $image="bluefin" $tag="latest" $ghcr="0" $github_event="0":
+setup-cache $image="rouge" $tag="latest" $ghcr="0" $github_event="0":
     #!/usr/bin/bash
     set -eou pipefail
 
@@ -693,7 +693,7 @@ setup-cache $image="bluefin" $tag="latest" $ghcr="0" $github_event="0":
 
     ALLOW_CACHE_WRITE="false"
 
-    BLESSED_IMAGE=bluefin-dx
+    BLESSED_IMAGE=rouge-dx
 
     if [[ "${image_name}" == "${BLESSED_IMAGE}" ]] && \
        [[ "{{ ghcr }}" == "1" ]] && \
