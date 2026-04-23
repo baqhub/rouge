@@ -85,7 +85,7 @@ jobs:
         id: build
         uses: ublue-os/titanoboa@main
         with:
-          image-ref: ghcr.io/baqhub/${{ steps.image.outputs.image_name }}:latest
+          image-ref: ghcr.io/rougeos/${{ steps.image.outputs.image_name }}:latest
           flatpaks-list: ${{ steps.flatpaks.outputs.flatpaks_list }}
           hook-post-rootfs: ${{ github.workspace }}/iso_files/configure_iso.sh
 

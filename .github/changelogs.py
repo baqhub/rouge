@@ -6,7 +6,7 @@ from typing import Any
 import re
 from collections import defaultdict
 
-REGISTRY = "docker://ghcr.io/baqhub/"
+REGISTRY = "docker://ghcr.io/rougeos/"
 
 IMAGE_MATRIX_LATEST = {
     "experience": ["base", "dx"],
@@ -38,7 +38,7 @@ OTHER_NAMES = {
 }
 
 COMMITS_FORMAT = "### Commits\n| Hash | Subject | Author |\n| --- | --- | --- |{commits}\n\n"
-COMMIT_FORMAT = "\n| **[{short}](https://github.com/baqhub/rouge/commit/{githash})** | {subject} | {author} |"
+COMMIT_FORMAT = "\n| **[{short}](https://github.com/rougeos/rouge/commit/{githash})** | {subject} | {author} |"
 
 CHANGELOG_TITLE = "{tag}: {pretty}"
 CHANGELOG_FORMAT = """\
@@ -70,10 +70,10 @@ For current users, type the following to rebase to this version:
 IMAGE_NAME=$(jq -r '.["image-name"]' < /usr/share/ublue-os/image-info.json)
 
 # For this Stream
-sudo bootc switch --enforce-container-sigpolicy ghcr.io/baqhub/$IMAGE_NAME:{target}
+sudo bootc switch --enforce-container-sigpolicy ghcr.io/rougeos/$IMAGE_NAME:{target}
 
 # For this Specific Image:
-sudo bootc switch --enforce-container-sigpolicy ghcr.io/baqhub/$IMAGE_NAME:{curr}
+sudo bootc switch --enforce-container-sigpolicy ghcr.io/rougeos/$IMAGE_NAME:{curr}
 ```
 """
 HANDWRITTEN_PLACEHOLDER = """\

@@ -1,7 +1,7 @@
 # Rouge
 *Deinonychus antirrhopus*
 
-[![Stable Images](https://github.com/baqhub/rouge/actions/workflows/build-image-stable.yml/badge.svg)](https://github.com/baqhub/rouge/actions/workflows/build-image-stable.yml)[![Latest Images](https://github.com/baqhub/rouge/actions/workflows/build-image-latest-main.yml/badge.svg)](https://github.com/baqhub/rouge/actions/workflows/build-image-latest-main.yml)
+[![Stable Images](https://github.com/rougeos/rouge/actions/workflows/build-image-stable.yml/badge.svg)](https://github.com/rougeos/rouge/actions/workflows/build-image-stable.yml)[![Latest Images](https://github.com/rougeos/rouge/actions/workflows/build-image-latest-main.yml/badge.svg)](https://github.com/rougeos/rouge/actions/workflows/build-image-latest-main.yml)
 
 **Rouge** is a cloud-native desktop operating system derived from [Bluefin](https://projectbluefin.io/), reimagined with its own visual identity and opinionated defaults.
 

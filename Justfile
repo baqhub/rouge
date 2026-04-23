@@ -1,4 +1,4 @@
-repo_organization := "baqhub"
+repo_organization := "rougeos"
 rechunker_image := "ghcr.io/ublue-os/legacy-rechunk:v1.0.1-x86_64@sha256:2627cbf92ca60ab7372070dcf93b40f457926f301509ffba47a04d6a9e1ddaf7"
 common_image := "ghcr.io/projectbluefin/common:latest"
 brew_image := "ghcr.io/ublue-os/brew:latest"
@@ -203,16 +203,16 @@ build $image="rouge" $tag="latest" $flavor="main" rechunk="0" ghcr="0" pipeline=
     LABELS+=("--label" "org.opencontainers.image.title=${image_name}")
     LABELS+=("--label" "org.opencontainers.image.version=${ver}")
     LABELS+=("--label" "ostree.linux=${kernel_release}")
-    LABELS+=("--label" "io.artifacthub.package.readme-url=https://raw.githubusercontent.com/baqhub/rouge/refs/heads/main/README.md")
+    LABELS+=("--label" "io.artifacthub.package.readme-url=https://raw.githubusercontent.com/rougeos/rouge/refs/heads/main/README.md")
     LABELS+=("--label" "io.artifacthub.package.logo-url=https://avatars.githubusercontent.com/u/97919220?s=200&v=4")
     LABELS+=("--label" "org.opencontainers.image.description=The next generation desktop OS")
     LABELS+=("--label" "containers.bootc=1")
     LABELS+=("--label" "org.opencontainers.image.created=$(date -u +%Y\-%m\-%d\T%H\:%M\:%S\Z)")
-    LABELS+=("--label" "org.opencontainers.image.source=https://raw.githubusercontent.com/baqhub/rouge/refs/heads/main/Containerfile")
+    LABELS+=("--label" "org.opencontainers.image.source=https://raw.githubusercontent.com/rougeos/rouge/refs/heads/main/Containerfile")
     LABELS+=("--label" "org.opencontainers.image.url=https://rougeos.com")
     LABELS+=("--label" "org.opencontainers.image.vendor={{ repo_organization }}")
     LABELS+=("--label" "io.artifacthub.package.deprecated=false")
-    LABELS+=("--label" "io.artifacthub.package.keywords=bootc,rouge,baq,baqhub")
+    LABELS+=("--label" "io.artifacthub.package.keywords=bootc,rouge,rougeos")
     LABELS+=("--label" "io.artifacthub.package.maintainers=[{\"name\": \"quentez\", \"email\": \"rouge@quentez.com\"}]")
 
     echo "::endgroup::"
@@ -312,13 +312,13 @@ rechunk $image="rouge" $tag="latest" $flavor="main" ghcr="0" pipeline="0":
     # Rest of Labels
     LABELS="
         io.artifacthub.package.deprecated=false
-        io.artifacthub.package.keywords=bootc,fedora,rouge,baq,baqhub
+        io.artifacthub.package.keywords=bootc,fedora,rouge,rougeos
         io.artifacthub.package.logo-url=https://avatars.githubusercontent.com/u/97919220?s=200&v=4
         io.artifacthub.package.maintainers=[{\"name\": \"quentez\", \"email\": \"rouge@quentez.com\"}]
-        io.artifacthub.package.readme-url=https://raw.githubusercontent.com/baqhub/rouge/refs/heads/main/README.md
+        io.artifacthub.package.readme-url=https://raw.githubusercontent.com/rougeos/rouge/refs/heads/main/README.md
         org.opencontainers.image.created=$(date -u +%Y\-%m\-%d\T%H\:%M\:%S\Z)
         org.opencontainers.image.license=Apache-2.0
-        org.opencontainers.image.source=https://raw.githubusercontent.com/baqhub/rouge/refs/heads/main/Containerfile
+        org.opencontainers.image.source=https://raw.githubusercontent.com/rougeos/rouge/refs/heads/main/Containerfile
         org.opencontainers.image.title=${image_name}
         org.opencontainers.image.url=https://rougeos.com
         org.opencontainers.image.vendor={{ repo_organization }}
@@ -385,7 +385,7 @@ rechunk $image="rouge" $tag="latest" $flavor="main" ghcr="0" pipeline="0":
         --volume "$PWD:/var/git" \
         --volume cache_ostree:/var/ostree \
         --env REPO=/var/ostree/repo \
-        --env PREV_REF=ghcr.io/baqhub/"${image_name}":"${tag}" \
+        --env PREV_REF=ghcr.io/rougeos/"${image_name}":"${tag}" \
         --env OUT_NAME="$OUT_NAME" \
         --env LABELS="${LABELS}" \
         --env "DESCRIPTION='The next generation desktop OS'" \
@@ -727,5 +727,5 @@ retag-nvidia-on-ghcr working_tag="" stream="" dry_run="1":
         skopeo="skopeo"
     fi
     for image in rouge-nvidia-open rouge-dx-nvidia-open rouge-dx-ai-nvidia-open; do
-      $skopeo copy docker://ghcr.io/baqhub/${image}:{{ working_tag }} docker://ghcr.io/baqhub/${image}:{{ stream }}
+      $skopeo copy docker://ghcr.io/rougeos/${image}:{{ working_tag }} docker://ghcr.io/rougeos/${image}:{{ stream }}
     done
