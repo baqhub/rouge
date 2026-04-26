@@ -6,7 +6,8 @@ IMAGE_INFO="$(cat /usr/share/ublue-os/image-info.json)"
 IMAGE_TAG="$(jq -c -r '."image-tag"' <<<"$IMAGE_INFO")"
 IMAGE_REF="$(jq -c -r '."image-ref"' <<<"$IMAGE_INFO")"
 IMAGE_REF="${IMAGE_REF##*://}"
-sbkey='https://github.com/ublue-os/akmods/raw/main/certs/public_key.der'
+sbkey1='https://downloads.rougeos.com/keys/rouge_2026-04-25-1.der'
+sbkey2='https://downloads.rougeos.com/keys/rouge_2026-04-25-2.der'
 
 # Configure Live Environment
 
@@ -139,28 +140,32 @@ rsync -aAXUHKP /var/lib/flatpak "$target"
 %end
 EOF
 
-# Fetch the Secureboot Public Key
-curl --retry 15 -Lo /etc/sb_pubkey.der "$sbkey"
+# Fetch the Secureboot Public Keys
+curl --retry 15 -Lo /etc/sb_pubkey_1.der "$sbkey1"
+curl --retry 15 -Lo /etc/sb_pubkey_2.der "$sbkey2"
 
-# Enroll Secureboot Key
+# Enroll Secureboot Keys
 tee /usr/share/anaconda/post-scripts/secureboot-enroll-key.ks <<'EOF'
 %post --erroronfail --nochroot
 set -oue pipefail
 
-readonly ENROLLMENT_PASSWORD="universalblue"
-readonly SECUREBOOT_KEY="/etc/sb_pubkey.der"
+readonly ENROLLMENT_PASSWORD="rouge"
+readonly SECUREBOOT_KEY_1="/etc/sb_pubkey_1.der"
+readonly SECUREBOOT_KEY_2="/etc/sb_pubkey_2.der"
 
 if [[ ! -d "/sys/firmware/efi" ]]; then
     echo "EFI mode not detected. Skipping key enrollment."
     exit 0
 fi
 
-if [[ ! -f "$SECUREBOOT_KEY" ]]; then
-    echo "Secure boot key not provided: $SECUREBOOT_KEY"
-    exit 0
+mokutil --timeout -1 || :
+
+if [[ -f "$SECUREBOOT_KEY_1" ]]; then
+    echo -e "$ENROLLMENT_PASSWORD\n$ENROLLMENT_PASSWORD" | mokutil --import "$SECUREBOOT_KEY_1" || :
 fi
 
-mokutil --timeout -1 || :
-echo -e "$ENROLLMENT_PASSWORD\n$ENROLLMENT_PASSWORD" | mokutil --import "$SECUREBOOT_KEY" || :
+if [[ -f "$SECUREBOOT_KEY_2" ]]; then
+    echo -e "$ENROLLMENT_PASSWORD\n$ENROLLMENT_PASSWORD" | mokutil --import "$SECUREBOOT_KEY_2" || :
+fi
 %end
 EOF

@@ -20,7 +20,7 @@ on:
         type: string
 
 env:
-  IMAGE_REGISTRY: ghcr.io/${{ github.repository_owner }}
+  IMAGE_REGISTRY: artifacts.rougeos.com
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref || github.run_id }}-${{ inputs.brand_name}}-${{ inputs.stream_name }}
@@ -225,11 +225,11 @@ jobs:
         with:
           string: ${{ env.IMAGE_REGISTRY }}
 
-      - name: Login to GitHub Container Registry
+      - name: Login to Rouge Registry
         if: github.event_name != 'pull_request'
         run: |
-          echo ${{ secrets.GITHUB_TOKEN }} | podman login ghcr.io -u ${{ github.actor }} --password-stdin
-          echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+          echo "${{ secrets.REGISTRY_PASSWORD }}" | podman login artifacts.rougeos.com -u github --password-stdin
+          echo "${{ secrets.REGISTRY_PASSWORD }}" | docker login artifacts.rougeos.com -u github --password-stdin
 
       - name: Push to GHCR
         id: push

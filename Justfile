@@ -1,6 +1,6 @@
 repo_organization := "rougeos"
 rechunker_image := "ghcr.io/ublue-os/legacy-rechunk:v1.0.1-x86_64@sha256:2627cbf92ca60ab7372070dcf93b40f457926f301509ffba47a04d6a9e1ddaf7"
-common_image := "ghcr.io/projectbluefin/common:latest"
+common_image := "ghcr.io/rougeos/config:latest"
 brew_image := "ghcr.io/ublue-os/brew:latest"
 images := '(
     [rouge]=rouge
@@ -106,7 +106,7 @@ build $image="rouge" $tag="latest" $flavor="main" rechunk="0" ghcr="0" pipeline=
     # Image Name
     image_name=$({{ just }} image_name {{ image }} {{ tag }} {{ flavor }})
 
-    common_image_sha=$(yq -r '.images[] | select(.name == "common") | .digest' image-versions.yml)
+    common_image_sha=$(yq -r '.images[] | select(.name == "config") | .digest' image-versions.yml)
     brew_image_sha=$(yq -r '.images[] | select(.name == "brew") | .digest' image-versions.yml)
 
     # Base Image
@@ -135,7 +135,7 @@ build $image="rouge" $tag="latest" $flavor="main" rechunk="0" ghcr="0" pipeline=
 
     # Kernel Release/Pin
     if [[ -z "${kernel_pin:-}" ]]; then
-        kernel_release=$(skopeo inspect --retry-times 3 docker://ghcr.io/ublue-os/akmods:"${akmods_flavor}"-"${fedora_version}" | jq -r '.Labels["ostree.linux"]')
+        kernel_release=$(skopeo inspect --retry-times 3 docker://ghcr.io/rougeos/akmods:"${akmods_flavor}"-"${fedora_version}" | jq -r '.Labels["ostree.linux"]')
     else
         kernel_release="${kernel_pin}"
     fi
@@ -149,7 +149,7 @@ build $image="rouge" $tag="latest" $flavor="main" rechunk="0" ghcr="0" pipeline=
         {{ just }} verify-container "akmods-nvidia-open:${akmods_flavor}-${fedora_version}-${kernel_release}"
     fi
 
-    {{ just }} verify-container "common:latest@${common_image_sha}" ghcr.io/projectbluefin https://raw.githubusercontent.com/projectbluefin/common/refs/heads/main/cosign.pub
+    {{ just }} verify-container "config:latest@${common_image_sha}"
     {{ just }} verify-container "brew:latest@${brew_image_sha}" ghcr.io/ublue-os https://raw.githubusercontent.com/ublue-os/brew/refs/heads/main/cosign.pub
 
     # Get Version
@@ -212,8 +212,8 @@ build $image="rouge" $tag="latest" $flavor="main" rechunk="0" ghcr="0" pipeline=
     LABELS+=("--label" "org.opencontainers.image.url=https://rougeos.com")
     LABELS+=("--label" "org.opencontainers.image.vendor={{ repo_organization }}")
     LABELS+=("--label" "io.artifacthub.package.deprecated=false")
-    LABELS+=("--label" "io.artifacthub.package.keywords=bootc,rouge,rougeos")
-    LABELS+=("--label" "io.artifacthub.package.maintainers=[{\"name\": \"quentez\", \"email\": \"rouge@quentez.com\"}]")
+    LABELS+=("--label" "io.artifacthub.package.keywords=bootc,fedora,rouge")
+    LABELS+=("--label" "io.artifacthub.package.maintainers=[{\"name\": \"rougeos\", \"email\": \"hello@rougeos.com\"}]")
 
     echo "::endgroup::"
     echo "::group:: Build Container"
@@ -312,9 +312,9 @@ rechunk $image="rouge" $tag="latest" $flavor="main" ghcr="0" pipeline="0":
     # Rest of Labels
     LABELS="
         io.artifacthub.package.deprecated=false
-        io.artifacthub.package.keywords=bootc,fedora,rouge,rougeos
+        io.artifacthub.package.keywords=bootc,fedora,rouge
         io.artifacthub.package.logo-url=https://avatars.githubusercontent.com/u/97919220?s=200&v=4
-        io.artifacthub.package.maintainers=[{\"name\": \"quentez\", \"email\": \"rouge@quentez.com\"}]
+        io.artifacthub.package.maintainers=[{\"name\": \"rougeos\", \"email\": \"hello@rougeos.com\"}]
         io.artifacthub.package.readme-url=https://raw.githubusercontent.com/rougeos/rouge/refs/heads/main/README.md
         org.opencontainers.image.created=$(date -u +%Y\-%m\-%d\T%H\:%M\:%S\Z)
         org.opencontainers.image.license=Apache-2.0
@@ -385,7 +385,7 @@ rechunk $image="rouge" $tag="latest" $flavor="main" ghcr="0" pipeline="0":
         --volume "$PWD:/var/git" \
         --volume cache_ostree:/var/ostree \
         --env REPO=/var/ostree/repo \
-        --env PREV_REF=ghcr.io/rougeos/"${image_name}":"${tag}" \
+        --env PREV_REF=artifacts.rougeos.com/"${image_name}":"${tag}" \
         --env OUT_NAME="$OUT_NAME" \
         --env LABELS="${LABELS}" \
         --env "DESCRIPTION='The next generation desktop OS'" \
@@ -470,7 +470,7 @@ changelogs branch="stable" handwritten="":
 
 # Verify Container with Cosign
 [group('Utility')]
-verify-container container="" registry="ghcr.io/ublue-os" key="":
+verify-container container="" registry="ghcr.io/rougeos" key="":
     #!/usr/bin/bash
     set -eou pipefail
 
@@ -492,7 +492,7 @@ verify-container container="" registry="ghcr.io/ublue-os" key="":
     # Public Key for Container Verification
     key={{ key }}
     if [[ -z "${key:-}" ]]; then
-        key="https://raw.githubusercontent.com/ublue-os/main/main/cosign.pub"
+        key="https://raw.githubusercontent.com/rougeos/rouge/refs/heads/main/cosign.pub"
     fi
 
     # Verify Container using cosign public key
@@ -520,8 +520,8 @@ secureboot $image="rouge" $tag="latest" $flavor="main":
     ${PODMAN} rm "$TMP"
 
     # Get the Public Certificates
-    curl --retry 3 -Lo /tmp/kernel-sign.der https://github.com/ublue-os/akmods/raw/main/certs/public_key.der
-    curl --retry 3 -Lo /tmp/akmods.der https://github.com/ublue-os/akmods/raw/main/certs/public_key_2.der
+    curl --retry 3 -Lo /tmp/kernel-sign.der https://downloads.rougeos.com/keys/rouge_2026-04-25-1.der
+    curl --retry 3 -Lo /tmp/akmods.der https://downloads.rougeos.com/keys/rouge_2026-04-25-2.der
     openssl x509 -in /tmp/kernel-sign.der -out /tmp/kernel-sign.crt
     openssl x509 -in /tmp/akmods.der -out /tmp/akmods.crt
 
@@ -718,14 +718,14 @@ setup-cache $image="rouge" $tag="latest" $ghcr="0" $github_event="0":
 
 # Retag images on GHCR
 [group('Admin')]
-retag-nvidia-on-ghcr working_tag="" stream="" dry_run="1":
+retag-nvidia working_tag="" stream="" dry_run="1":
     #!/bin/bash
     set -euxo pipefail
     skopeo="echo === skopeo"
     if [[ "{{ dry_run }}" -ne 1 ]]; then
-        echo "$GITHUB_PAT" | podman login -u $GITHUB_USERNAME --password-stdin ghcr.io
+        echo "$REGISTRY_PASSWORD" | podman login -u "$REGISTRY_USER" --password-stdin artifacts.rougeos.com
         skopeo="skopeo"
     fi
     for image in rouge-nvidia-open rouge-dx-nvidia-open rouge-dx-ai-nvidia-open; do
-      $skopeo copy docker://ghcr.io/rougeos/${image}:{{ working_tag }} docker://ghcr.io/rougeos/${image}:{{ stream }}
+      $skopeo copy docker://artifacts.rougeos.com/${image}:{{ working_tag }} docker://artifacts.rougeos.com/${image}:{{ stream }}
     done

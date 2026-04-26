@@ -85,7 +85,7 @@ jobs:
         id: build
         uses: ublue-os/titanoboa@main
         with:
-          image-ref: ghcr.io/rougeos/${{ steps.image.outputs.image_name }}:latest
+          image-ref: artifacts.rougeos.com/${{ steps.image.outputs.image_name }}:latest
           flatpaks-list: ${{ steps.flatpaks.outputs.flatpaks_list }}
           hook-post-rootfs: ${{ github.workspace }}/iso_files/configure_iso.sh
 
@@ -101,10 +101,10 @@ jobs:
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
-          AWS_ENDPOINT_URL: https://e7f259007ddc10617f9e5953984836cc.r2.cloudflarestorage.com
+          AWS_ENDPOINT_URL: https://434ca9e3f1f004a03f446ff5a527f384.r2.cloudflarestorage.com
           AWS_REGION: auto
         run: |
-          aws s3 cp output/ s3://rouge-public/iso/ \
+          aws s3 cp output/ s3://rouge-downloads/iso/ \
             --recursive \
             --cache-control "no-cache"
 
