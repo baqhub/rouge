@@ -11,7 +11,6 @@ sed -i 's|uupd|& --disable-module-distrobox|' /usr/lib/systemd/system/uupd.servi
 # systemctl --global enable bazaar.service
 systemctl --global enable podman-auto-update.timer
 systemctl --global enable ublue-user-setup.service
-systemctl enable brew-setup.service
 systemctl enable dconf-update.service
 systemctl enable flatpak-nuke-fedora.service
 systemctl enable input-remapper.service

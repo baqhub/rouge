@@ -1,7 +1,6 @@
 repo_organization := "rougeos"
 rechunker_image := "ghcr.io/ublue-os/legacy-rechunk:v1.0.1-x86_64@sha256:2627cbf92ca60ab7372070dcf93b40f457926f301509ffba47a04d6a9e1ddaf7"
 common_image := "ghcr.io/rougeos/config:latest"
-brew_image := "ghcr.io/ublue-os/brew:latest"
 images := '(
     [rouge]=rouge
     [rouge-dx]=rouge-dx
@@ -107,7 +106,6 @@ build $image="rouge" $tag="latest" $flavor="main" rechunk="0" ghcr="0" pipeline=
     image_name=$({{ just }} image_name {{ image }} {{ tag }} {{ flavor }})
 
     common_image_sha=$(yq -r '.images[] | select(.name == "config") | .digest' image-versions.yml)
-    brew_image_sha=$(yq -r '.images[] | select(.name == "brew") | .digest' image-versions.yml)
 
     # Base Image
     base_image_name="silverblue"
@@ -131,7 +129,7 @@ build $image="rouge" $tag="latest" $flavor="main" rechunk="0" ghcr="0" pipeline=
     fedora_version=$({{ just }} fedora_version '{{ image }}' '{{ tag }}' '{{ flavor }}' '{{ kernel_pin }}')
 
     # Verify Base Image with cosign
-    {{ just }} verify-container "${base_image_name}-main:${fedora_version}" ghcr.io/ublue-os https://raw.githubusercontent.com/ublue-os/main/refs/heads/main/cosign.pub
+    {{ just }} verify-container "${base_image_name}-main:${fedora_version}" ghcr.io/ublue-os "${PWD}/cosign-ublue.pub"
 
     # Kernel Release/Pin
     if [[ -z "${kernel_pin:-}" ]]; then
@@ -150,7 +148,6 @@ build $image="rouge" $tag="latest" $flavor="main" rechunk="0" ghcr="0" pipeline=
     fi
 
     {{ just }} verify-container "config:latest@${common_image_sha}"
-    {{ just }} verify-container "brew:latest@${brew_image_sha}" ghcr.io/ublue-os https://raw.githubusercontent.com/ublue-os/brew/refs/heads/main/cosign.pub
 
     # Get Version
     if [[ "${tag}" =~ stable ]]; then
@@ -183,8 +180,6 @@ build $image="rouge" $tag="latest" $flavor="main" rechunk="0" ghcr="0" pipeline=
     BUILD_ARGS+=("--build-arg" "BASE_IMAGE_NAME=${base_image_name}")
     BUILD_ARGS+=("--build-arg" "COMMON_IMAGE={{ common_image }}")
     BUILD_ARGS+=("--build-arg" "COMMON_IMAGE_SHA=${common_image_sha}")
-    BUILD_ARGS+=("--build-arg" "BREW_IMAGE={{ brew_image }}")
-    BUILD_ARGS+=("--build-arg" "BREW_IMAGE_SHA=${brew_image_sha}")
     BUILD_ARGS+=("--build-arg" "FEDORA_MAJOR_VERSION=${fedora_version}")
     BUILD_ARGS+=("--build-arg" "IMAGE_NAME=${image_name}")
     BUILD_ARGS+=("--build-arg" "IMAGE_VENDOR={{ repo_organization }}")
