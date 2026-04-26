@@ -1,0 +1,15 @@
+[Unit]
+Description=Bind mount /dev/shm with noexec
+DefaultDependencies=no
+After=local-fs.target
+Before=umount.target
+Conflicts=umount.target
+
+[Mount]
+What=/dev/shm
+Where=/dev/shm
+Type=none
+Options=bind,noexec,nosuid,nodev
+
+[Install]
+WantedBy=local-fs.target

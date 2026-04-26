@@ -30,6 +30,7 @@ FEDORA_PACKAGES=(
     davfs2
     ddcutil
     evtest
+    fapolicyd
     fastfetch
     firewall-config
     fish
