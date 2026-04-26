@@ -13,10 +13,11 @@ systemctl --global enable podman-auto-update.timer
 systemctl --global enable ublue-user-setup.service
 systemctl enable dconf-update.service
 systemctl enable fapolicyd.service
-systemctl enable var-home.mount
 systemctl enable var-tmp.mount
 systemctl enable dev-shm.mount
 # tmp.mount is a Fedora drop-in target; just rely on the upstream unit being enabled.
+# /var/home is intentionally NOT noexec — would break rootless podman storage.
+# fapolicyd's trust-DB-based default-deny is the primary exec gate for $HOME.
 systemctl enable flatpak-nuke-fedora.service
 systemctl enable input-remapper.service
 systemctl enable rpm-ostree-countme.service
