@@ -131,7 +131,7 @@ build $image="rouge" $tag="latest" $flavor="main" rechunk="0" ghcr="0" pipeline=
     fedora_version=$({{ just }} fedora_version '{{ image }}' '{{ tag }}' '{{ flavor }}' '{{ kernel_pin }}')
 
     # Verify Base Image with cosign
-    {{ just }} verify-container "${base_image_name}-main:${fedora_version}"
+    {{ just }} verify-container "${base_image_name}-main:${fedora_version}" ghcr.io/ublue-os https://raw.githubusercontent.com/ublue-os/main/refs/heads/main/cosign.pub
 
     # Kernel Release/Pin
     if [[ -z "${kernel_pin:-}" ]]; then
