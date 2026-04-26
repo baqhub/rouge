@@ -1,0 +1,15 @@
+# Rouge custom allow rules.
+# Inserted before 90-deny-execute.rules so these explicit allows take effect.
+
+# Allow execution from system flatpak store
+allow perm=any all : dir=/var/lib/flatpak/
+
+# Allow flatpak runtime bind mounts seen by sandboxed apps
+allow perm=any all : dir=/run/flatpak/
+
+# Allow execution from system podman / distrobox / toolbox container storage.
+# Per-user (rootless) container paths under $HOME/.local/share/containers/ are
+# intentionally not whitelisted: dropping binaries there is precisely the kind
+# of escape hatch the lockdown closes. Run distrobox / podman rootful, or use
+# flatpak instead.
+allow perm=any all : dir=/var/lib/containers/
