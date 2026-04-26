@@ -1,10 +1,10 @@
-# Bluefin Copilot Instructions
+# Rouge Copilot Instructions
 
-This document provides essential information for coding agents working with the Bluefin repository to minimize exploration time and avoid common build failures.
+This document provides essential information for coding agents working with the Rouge repository to minimize exploration time and avoid common build failures.
 
 ## Repository Overview
 
-**Bluefin** is a cloud-native desktop operating system that reimagines the Linux desktop experience. It's an OS built on Fedora Linux using container technologies with atomic updates.
+**Rouge** is a cloud-native desktop operating system derived from Bluefin. It's an OS built on Fedora Linux using container technologies with atomic updates.
 
 - **Type**: Container-based Linux distribution build system (75MB total, 74MB system files)
 - **Base**: Fedora Linux with GNOME Desktop + Universal Blue infrastructure
@@ -78,13 +78,13 @@ just fix    # Only if Just command runner is available
 **Build commands (use with extreme caution - these take 30+ minutes and require significant resources):**
 ```bash
 # Build base image (30-60 minutes, requires 20GB+ disk space)
-just build bluefin latest main
+just build rouge latest main
 
 # Build developer variant (45-90 minutes, requires 25GB+ disk space)
-just build bluefin-dx latest main
+just build rouge-dx latest main
 
 # Build with specific kernel pin
-just build bluefin latest main "" "" "" "6.10.10-200.fc40.x86_64"
+just build rouge latest main "" "" "" "6.10.10-200.fc40.x86_64"
 ```
 
 **Utility commands:**
@@ -96,7 +96,7 @@ just clean
 just --list
 
 # Validate image/tag/flavor combinations (if Just available)
-just validate bluefin latest main
+just validate rouge latest main
 ```
 
 **Working without Just (when external access is restricted):**
@@ -250,7 +250,7 @@ The `Justfile` is the central build orchestration tool with these key recipes:
 
 **Image/Tag Definitions:**
 ```bash
-images: bluefin, bluefin-dx
+images: rouge, rouge-dx
 flavors: main, nvidia-open
 tags: stable, latest, beta
 ```
@@ -265,7 +265,7 @@ tags: stable, latest, beta
 The `Containerfile` uses a multi-stage build process:
 
 1. **Stage `ctx`** (FROM scratch): Copies all build context (system_files, build_files, etc.)
-2. **Stage `base`** (FROM silverblue-main): Base Bluefin image
+2. **Stage `base`** (FROM silverblue-main): Base Rouge image
    - Mounts build context from `ctx` stage
    - Runs `/ctx/build_files/shared/build.sh` which executes all scripts in order
 3. **Stage `dx`** (optional, in full Containerfile): Developer experience layer
@@ -273,7 +273,7 @@ The `Containerfile` uses a multi-stage build process:
 **Build Arguments:**
 - `BASE_IMAGE_NAME` - Upstream base (silverblue/kinoite)
 - `FEDORA_MAJOR_VERSION` - Dynamically set by Just (42/43)
-- `IMAGE_NAME` - Target image name (bluefin/bluefin-dx)
+- `IMAGE_NAME` - Target image name (rouge/rouge-dx)
 - `KERNEL` - Pinned kernel version (optional)
 - `UBLUE_IMAGE_TAG` - Stream tag (stable/latest/beta)
 
@@ -289,8 +289,7 @@ Scripts in `build_files/base/` execute in numerical order:
 8. `19-initramfs.sh` - Regenerates initramfs
 
 ### Additional Recipe Collections
-- `just/bluefin-apps.just` - User-facing app management recipes
-- `just/bluefin-system.just` - System management recipes
+- Upstream recipes are shipped via the vendored `system_files/shared/usr/share/ublue-os/just/` tree
 - `brew/*.Brewfile` - Homebrew package collections (ai, cli, fonts, k8s)
 
 ## Development Guidelines
@@ -327,8 +326,7 @@ This repository is complex but well-structured. Following these instructions wil
 
 - Ensure that [conventional commits](https://www.conventionalcommits.org/en/v1.0.0/#specification) are used and enforced for every commit and pull request title.
 - Always be surgical with the least amount of code, the project strives to be easy to maintain.
-- Documentation for this project exists in ublue-os/bluefin-docs
-- Bluefin LTS exists in ublue-os/bluefin-lts
+- Rouge is derived from Bluefin; shared tooling lives in projectbluefin/common
 
 ## Attribution Requirements
 

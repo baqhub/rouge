@@ -100,7 +100,7 @@ fi
 systemctl enable podman.socket
 systemctl enable swtpm-workaround.service
 systemctl enable libvirt-workaround.service
-systemctl enable bluefin-dx-groups.service
+systemctl enable rouge-dx-groups.service
 
 sed -i 's@enabled=1@enabled=0@g' /etc/yum.repos.d/fedora-cisco-openh264.repo
 

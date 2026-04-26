@@ -10,7 +10,7 @@ on:
   #     - ".github/workflows/*validate*.yml"
   #     - "system_files/shared/etc/bazaar/**"
   # schedule:
-  #   - cron: "0 1 * * TUE" # Every Tuesday at 1:00 AM UTC (same as bluefin-lts)
+  #   - cron: "0 1 * * TUE" # Every Tuesday at 1:00 AM UTC
   workflow_call:
   workflow_dispatch:
 
@@ -29,7 +29,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        brand_name: ["bluefin"]
+        brand_name: ["rouge"]
     with:
  #    kernel_pin: 6.17.12-300.fc43.x86_64 ## Pin to 6.17 for ZFS compatibility
       brand_name: ${{ matrix.brand_name }}

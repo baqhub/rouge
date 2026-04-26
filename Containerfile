@@ -18,14 +18,14 @@ COPY --from=common /system_files/shared /system_files/shared
 COPY --from=common /system_files/bluefin /system_files/shared
 COPY --from=brew /system_files /system_files/shared
 
-## bluefin image section
+## rouge image section
 FROM ${BASE_IMAGE}:${FEDORA_MAJOR_VERSION} AS base
 
 ARG AKMODS_FLAVOR="coreos-stable"
 ARG BASE_IMAGE_NAME="silverblue"
 ARG FEDORA_MAJOR_VERSION="40"
 ARG IMAGE_NAME="rouge"
-ARG IMAGE_VENDOR="baqhub"
+ARG IMAGE_VENDOR="rougeos"
 ARG KERNEL="6.10.10-200.fc40.x86_64"
 ARG SHA_HEAD_SHORT="dedbeef"
 ARG UBLUE_IMAGE_TAG="stable"
