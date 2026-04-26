@@ -15,3 +15,10 @@ devcontainer
 __pycache__/
 *.py[cod]
 *$py.class
+
+# macOS
+.DS_Store
+
+# Claude Code local state (keep shared config like settings.json, commands/, agents/, hooks/)
+.claude/settings.local.json
+.claude/scheduled_tasks.lock
