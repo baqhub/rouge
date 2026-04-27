@@ -21,6 +21,12 @@ tar -xvzf /tmp/akmods/"$AKMODS_TARGZ" -C /tmp/
 mv /tmp/rpms/* /tmp/akmods/
 # NOTE: kernel-rpms should auto-extract into correct location
 
+# silverblue-main pre-installs the upstream ublue-os-akmods-addons (which ships
+# akmods-ublue.der containing the ublue-os public key). Replace it with our
+# rouge build, which ships rouge_2026-04-25-{1,2}.der under
+# /etc/pki/akmods/certs/ — required for the MOK enrollment unit and ujust.
+dnf5 -y reinstall /tmp/akmods/ublue-os/ublue-os-akmods-addons-*.rpm
+
 # Install Kernel
 dnf5 -y install \
     /tmp/kernel-rpms/kernel-[0-9]*.rpm \
