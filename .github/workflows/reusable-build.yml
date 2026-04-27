@@ -227,11 +227,19 @@ jobs:
 
       - name: Login to Rouge Registry
         if: github.event_name != 'pull_request'
+        # docker login writes ~/.docker/config.json which is read by regctl
+        # (push), cosign (signing), and ORAS (SBOM upload).
         run: |
-          echo "${{ secrets.REGISTRY_PASSWORD }}" | podman login artifacts.rougeos.com -u github --password-stdin
           echo "${{ secrets.REGISTRY_PASSWORD }}" | docker login artifacts.rougeos.com -u github --password-stdin
 
-      - name: Push to GHCR
+      - name: Install regctl
+        if: github.event_name != 'pull_request'
+        run: |
+          curl -fsSL https://github.com/regclient/regclient/releases/download/v0.11.3/regctl-linux-amd64 -o regctl
+          chmod 0755 regctl
+          sudo mv regctl /usr/local/bin/regctl
+
+      - name: Push to Rouge Registry
         id: push
         if: github.event_name != 'pull_request'
         uses: nick-fields/retry@ad984534de44a9489a53aefd81eb77f87c70dc60 # v4.0.0
@@ -240,14 +248,40 @@ jobs:
           retry_wait_seconds: 15
           timeout_minutes: 30
           command: |
-            set -euox pipefail
+            set -euo pipefail
 
+            # podman push (containers/image library) does not implement OCI
+            # chunked uploads — it sends each layer in a single PATCH request,
+            # which Cloudflare rejects with 413 once a layer exceeds the 100 MB
+            # body-size limit. regctl does proper chunked PATCH uploads, so we
+            # materialize the image as an OCI layout and push with regctl.
+            DEST="${{ steps.registry_case.outputs.lowercase }}/${{ env.IMAGE_NAME }}"
+
+            OCI_DIR="$(mktemp -d -p /tmp oci.XXXXXX)"
+            sudo skopeo copy \
+              "containers-storage:localhost/${{ env.IMAGE_NAME }}:${{ env.DEFAULT_TAG }}" \
+              "oci:${OCI_DIR}:${{ env.DEFAULT_TAG }}"
+            sudo chown -R "$(id -u):$(id -g)" "${OCI_DIR}"
+
+            # Free containers-storage now that we have an OCI layout — runner
+            # disk is tight and the rootful storage holds an uncompressed copy
+            # of every layer.
+            sudo podman rmi --force "localhost/${{ env.IMAGE_NAME }}:${{ env.DEFAULT_TAG }}" || true
+
+            # First tag: real upload of layers + manifest from the OCI layout.
+            regctl image copy \
+              "ocidir://${OCI_DIR}:${{ env.DEFAULT_TAG }}" \
+              "${DEST}:${{ env.DEFAULT_TAG }}"
+
+            # Additional tags: registry-to-registry copy — only the manifest is
+            # written, blobs are already present.
             for tag in ${{ steps.generate-tags.outputs.alias_tags }}; do
-              sudo -E podman push ${{ env.IMAGE_NAME }}:${tag} ${{ steps.registry_case.outputs.lowercase }}/${{ env.IMAGE_NAME }}:${tag}
+              if [ "${tag}" != "${{ env.DEFAULT_TAG }}" ]; then
+                regctl image copy "${DEST}:${{ env.DEFAULT_TAG }}" "${DEST}:${tag}"
+              fi
             done
 
-            digest=$(skopeo inspect docker://${{ steps.registry_case.outputs.lowercase }}/${{ env.IMAGE_NAME }}:${{ env.DEFAULT_TAG }} --format '{{.Digest}}')
-
+            digest=$(regctl image digest "${DEST}:${{ env.DEFAULT_TAG }}")
             echo "digest=${digest}" >> $GITHUB_OUTPUT
 
       - name: Install Cosign
@@ -277,10 +311,10 @@ jobs:
         if: github.event_name != 'pull_request'
         uses: oras-project/setup-oras@38de303aac69abb66f3e6255b7198bff35f323e3 # v2.0.0
 
-      - name: Login to GitHub Container Registry with ORAS
+      - name: Login to Rouge Registry with ORAS
         if: github.event_name != 'pull_request'
         run: |
-          echo ${{ secrets.GITHUB_TOKEN }} | oras login ghcr.io -u ${{ github.actor }} --password-stdin
+          echo "${{ secrets.REGISTRY_PASSWORD }}" | oras login artifacts.rougeos.com -u github --password-stdin
 
       - name: Upload SBOM
         if: github.event_name != 'pull_request'

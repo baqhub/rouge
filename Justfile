@@ -630,7 +630,9 @@ generate-build-tags image="rouge" tag="latest" flavor="main" kernel_pin="" ghcr=
     elif [[ "{{ tag }}" =~ "stable" && "{{ ghcr }}" == "0" ]]; then
         BUILD_TAGS+=("stable" "stable-${version}" "stable-${version:3}" "gts" "gts-${version}" "gts-${version:3}")
     elif [[ ! "{{ tag }}" =~ stable|beta ]]; then
-        BUILD_TAGS+=("${FEDORA_VERSION}" "${FEDORA_VERSION}-${version}" "${FEDORA_VERSION}-${version:3}")
+        # ${version} = ${FEDORA_VERSION}.${date} so ${FEDORA_VERSION}-${version}
+        # would produce 43-43.YYYYMMDD — already covered by 43-YYYYMMDD.
+        BUILD_TAGS+=("${FEDORA_VERSION}" "${FEDORA_VERSION}-${version:3}")
     fi
 
     if [[ "${github_event}" == "pull_request" ]]; then
