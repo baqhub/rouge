@@ -21,21 +21,29 @@ Visit [rougeos.com](https://rougeos.com/) to explore installation options and ge
 
 ### Secure Boot
 
-Secure Boot is supported by default. After the first installation, you will be prompted to enroll the secure boot key in the BIOS.
+Secure Boot is supported by default. Kernel modules are dual-signed with two Rouge-owned keys, both of which are enrolled at first boot when installing from the Rouge ISO.
 
-Enter the password `universalblue` when prompted to enroll the key.
+Enter the password `rouge` when prompted by the MokManager UI to enroll the keys.
 
-If this step is not completed during the initial setup, you can manually enroll the key by running the following command in the terminal:
+If you installed via the ISO and missed the enrollment, or if you rebased to Rouge from another image, you can enroll the keys manually:
 
 ```
 ujust enroll-secure-boot-key
 ```
 
-Secure boot is supported with a custom key. The pub key can be found in the root of the akmods repository [here](https://github.com/ublue-os/akmods/raw/main/certs/public_key.der). If you'd like to enroll this key prior to installation or rebase, download the key and run the following:
+The public keys are published at:
+
+- https://downloads.rougeos.com/keys/rouge_2026-04-25-1.der
+- https://downloads.rougeos.com/keys/rouge_2026-04-25-2.der
+
+To enroll them ahead of time without `ujust`:
 
 ```bash
+curl -LO https://downloads.rougeos.com/keys/rouge_2026-04-25-1.der
+curl -LO https://downloads.rougeos.com/keys/rouge_2026-04-25-2.der
 sudo mokutil --timeout -1
-sudo mokutil --import public_key.der
+sudo mokutil --import rouge_2026-04-25-1.der
+sudo mokutil --import rouge_2026-04-25-2.der
 ```
 
 ## License
