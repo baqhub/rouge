@@ -48,7 +48,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        base_name: ["rouge-dx-ai"]
+        base_name: ["rouge-dx", "rouge-dx-ai"]
         image_flavor: ["nvidia-open"]
 
     steps:
