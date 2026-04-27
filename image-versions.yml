@@ -6,4 +6,4 @@ images:
   - name: config
     image: ghcr.io/rougeos/config
     tag: latest
-    digest: sha256:f247e37c6fe670ad73f99328bfd21e502a20f4785c827004d3f94fc3c0af9d7d
+    digest: sha256:bcebda75887b9a1681c7c3040bd28932d403535e051dd141eff262400881e89c
